@@ -3,37 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนรีแมพรถยนต์</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <title>ลงทะเบียนการรีแมฟรถยนต์</title>
     <link rel="stylesheet" href="style.css">
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/liff.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>ลงทะเบียนรีแมพรถยนต์</h1>
-        <form id="remapForm">
-            <div>
-                <label for="fullName">ชื่อ-สกุล:</label>
-                <input type="text" id="fullName" name="fullName" required>
-            </div>
-            <div>
-                <label for="phoneNumber">เบอร์โทร:</label>
-                <input type="tel" id="phoneNumber" name="phoneNumber" required>
-            </div>
-            <div>
-                <label for="licensePlate">เลขทะเบียนรถ:</label>
-                <input type="text" id="licensePlate" name="licensePlate" required>
-            </div>
-            <div>
-                <label for="warrantyDate">วันที่ลงทะเบียนรับประกัน:</label>
-                <input type="text" id="warrantyDate" name="warrantyDate" readonly>
-            </div>
-            <button type="submit" id="submitButton">บันทึกข้อมูล</button>
+        <h1>ลงทะเบียนรถยนต์</h1>
+        <form id="registrationForm">
+            <input type="hidden" id="lineUserId" name="lineUserId">
+
+            <label for="fullName">ชื่อ - นามสกุล:</label>
+            <input type="text" id="fullName" name="fullName" placeholder="กรุณากรอกชื่อ-นามสกุล" required>
+
+            <label for="phoneNumber">เบอร์โทรศัพท์:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="กรุณากรอกเบอร์โทรศัพท์" required>
+
+            <label for="licensePlate">เลขทะเบียนรถ:</label>
+            <input type="text" id="licensePlate" name="licensePlate" placeholder="เช่น กข 1234 หรือ 1234" required>
+
+            <label for="registrationDate">วันที่ลงทะเบียนรับประกัน:</label>
+            <input type="date" id="registrationDate" name="registrationDate" readonly>
+
+            <button type="submit">บันทึกข้อมูล</button>
         </form>
-        <div id="message"></div>
-        <button id="closeButton" style="display:none; background-color: #555;">ปิดหน้าต่างนี้</button>
+
+        <div id="responseMessage">
+            บันทึกข้อมูลเรียบร้อยแล้ว
+            <button id="closeWindowBtn">ปิดหน้าต่างนี้</button>
+        </div>
+
+        <div class="loading-overlay" id="loadingOverlay">
+            กำลังบันทึกข้อมูล...
+        </div>
     </div>
 
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="script_register.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
