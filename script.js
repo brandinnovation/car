@@ -1,5 +1,5 @@
 // ต้องเปลี่ยนเป็น Web App URL ของ Google Apps Script ที่คุณได้จากขั้นตอนที่ 1.3
-const GOOGLE_APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'; 
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBL7Sp11EUevexL_p_o_ZWFFNMLYU2mwo80l0YizSTd9ioCc8I5MAq1FD14ULMxQ4WhQ/exec'; 
 
 document.addEventListener('DOMContentLoaded', function() {
     const registrationForm = document.getElementById('registrationForm');
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize LIFF
     liff.init({
-        liffId: 'YOUR_LIFF_ID_FOR_REGISTRATION_HERE' // เปลี่ยนเป็น LIFF ID ของคุณสำหรับหน้าลงทะเบียน
+        liffId: '2007499630-0J5jPaaP' // เปลี่ยนเป็น LIFF ID ของคุณสำหรับหน้าลงทะเบียน
     }).then(() => {
         if (!liff.isLoggedIn()) {
             liff.login();
