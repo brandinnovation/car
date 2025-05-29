@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลรถยนต์ของคุณ</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/liff.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>ข้อมูลรถยนต์ของคุณ</h2>
+        <div id="carList" class="car-list">
+            <!-- Car data will be loaded here -->
+            <p style="text-align: center; color: #FFF;">กำลังโหลดข้อมูล...</p>
+        </div>
+        <div class="loading-overlay" id="loadingOverlay">
+            กำลังโหลดข้อมูล...
+        </div>
+        <button id="closeWindowBtn" style="margin-top: 20px;">ปิดหน้าต่างนี้</button>
+    </div>
+
+    <script src="view_script.js"></script>
+</body>
+</html>
