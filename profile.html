@@ -1,25 +1,120 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลรถยนต์ของฉัน</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ข้อมูลส่วนตัว</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS เดิมทั้งหมด (เหมือนในคำตอบแรก) */
+    /* ยังคงใช้สไตล์เดิม - สีดำและสีเหลืองทอง */
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ข้อมูลรถยนต์ของคุณ</h1>
-        <div id="userInfo">
-            <p><strong>ชื่อผู้ใช้ LINE:</strong> <span id="lineDisplayName">กำลังโหลด...</span></p>
-        </div>
-        <div id="carListContainer">
-            </div>
-        <div id="message"></div>
-        <div id="loading" style="display:none;">กำลังโหลดข้อมูลรถยนต์...</div>
+  <div class="container">
+    <h1>ข้อมูลการลงทะเบียนรถยนต์</h1>
+    
+    <div id="profileData">
+      <div class="loading">กำลังโหลดข้อมูล...</div>
     </div>
+    
+    <button class="btn" id="closeBtn">ปิดหน้าต่างนี้</button>
+  </div>
 
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="script_profile.js"></script>
+  <script>
+    // 1. กำหนดค่าเริ่มต้น
+    const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbz2Kz_HPUAAu2KWUxxwBfrGVNXA6E9ecj2xb7iR-1Oz0DDUVD7MYhxM4rpf0_m1qbnCOw/exec'; // แทนที่ด้วย URL ของคุณ
+    let userId = null;
+    
+    // 2. เริ่มต้น LIFF
+    document.addEventListener('DOMContentLoaded', () => {
+      liff.init({
+        liffId: '2007499630-r04RVeeV' // แทนที่ด้วย LIFF ID จริง
+      })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          // 3. ดึงข้อมูลผู้ใช้
+          return liff.getProfile();
+        }
+      })
+      .then(profile => {
+        userId = profile.userId;
+        console.log('User ID:', userId);
+        
+        // 4. โหลดข้อมูล
+        loadProfileData();
+      })
+      .catch(error => {
+        console.error('LIFF Error:', error);
+        document.getElementById('profileData').innerHTML = `
+          <div class="no-data">
+            เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ${error.message}
+          </div>
+        `;
+      });
+      
+      // 5. ปุ่มปิดหน้าต่าง
+      document.getElementById('closeBtn').addEventListener('click', () => {
+        liff.closeWindow();
+      });
+    });
+    
+    // 6. ฟังก์ชันโหลดข้อมูล
+    async function loadProfileData() {
+      try {
+        // 7. ดึงข้อมูลจาก Google Apps Script
+        const response = await fetch(`${ENDPOINT_URL}?userId=${userId}`);
+        const result = await response.json();
+        
+        const profileContainer = document.getElementById('profileData');
+        
+        if (result.status !== 'success' || result.data.length === 0) {
+          profileContainer.innerHTML = `
+            <div class="no-data">
+              ไม่พบข้อมูลการลงทะเบียน
+            </div>
+          `;
+          return;
+        }
+        
+        // 8. แสดงข้อมูล
+        let html = '';
+        result.data.forEach((car, index) => {
+          html += `
+            <div class="car-record">
+              <h3>รถยนต์ ${index + 1}</h3>
+              <div class="info-row">
+                <div class="info-label">ชื่อ-สกุล:</div>
+                <div class="info-value">${car.firstName} ${car.lastName}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">เบอร์โทร:</div>
+                <div class="info-value">${car.phone}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">ทะเบียนรถ:</div>
+                <div class="info-value">${car.carPlate}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">วันที่ลงทะเบียน:</div>
+                <div class="info-value">${car.regDate}</div>
+              </div>
+            </div>
+          `;
+        });
+        
+        profileContainer.innerHTML = html;
+        
+      } catch (error) {
+        document.getElementById('profileData').innerHTML = `
+          <div class="no-data">
+            เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}
+          </div>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
