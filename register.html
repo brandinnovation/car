@@ -135,10 +135,10 @@
 <body>
     <div class="container">
         <h1>ลงทะเบียนรีแมพรถยนต์</h1>
-        <div id="loading" class="hidden">กำลังโหลด...</div>
+        <div id="loading">กำลังโหลด...</div> <!-- เอา hidden ออก เพื่อให้เห็นตอนโหลด LIFF -->
         <div id="errorMessage" class="hidden" style="color: red;">เกิดข้อผิดพลาด: <span id="errorText"></span></div>
 
-        <form id="registrationForm">
+        <form id="registrationForm" class="hidden"> <!-- ซ่อน form ไว้ก่อนจนกว่า LIFF จะโหลดเสร็จ -->
             <input type="hidden" id="lineUserId" name="lineUserId">
             <div class="form-group">
                 <label for="fullName">ชื่อ-สกุล:</label>
@@ -166,9 +166,8 @@
     </div>
 
     <script>
-        // Set the Apps Script Web App URL here
-        // ต้องเป็น URL ของ Apps Script Web App ที่ Deploy แล้ว (จากข้อ 2.6)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBL7Sp11EUevexL_p_o_ZWFFNMLYU2mwo80l0YizSTd9ioCc8I5MAq1FD14ULMxQ4WhQ/exec'; // <-- แก้ไขตรงนี้!
+        // SCRIPT_URL ไม่ได้ถูกใช้โดยตรงเมื่อใช้ google.script.run แต่ใส่ไว้เพื่อความเข้าใจ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBL7Sp11EUevexL_p_o_ZWFFNMLYU2mwo80l0YizSTd9ioCc8I5MAq1FD14ULMxQ4WhQ/exec'; // <-- ตรวจสอบว่าถูกต้อง
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registrationForm');
@@ -190,7 +189,7 @@
 
             // Initialize LIFF
             liff.init({
-                liffId: '2007499630-0J5jPaaP' // <-- แก้ไขตรงนี้! LIFF ID สำหรับลงทะเบียน
+                liffId: '2007499630-0J5jPaaP' // <-- ตรวจสอบว่าถูกต้อง
             }).then(() => {
                 if (!liff.isLoggedIn()) {
                     liff.login();
@@ -202,13 +201,13 @@
                         form.classList.remove('hidden'); // Show form
                     }).catch(err => {
                         console.error('Error getting profile:', err);
-                        showError('ไม่สามารถดึงข้อมูลผู้ใช้ Line ได้');
+                        showError('ไม่สามารถดึงข้อมูลผู้ใช้ Line ได้: ' + err.message);
                         loadingDiv.classList.add('hidden');
                     });
                 }
             }).catch(err => {
                 console.error('LIFF initialization failed', err);
-                showError('ไม่สามารถเชื่อมต่อ Line ได้');
+                showError('LIFF ไม่สามารถเชื่อมต่อได้: ' + err.message);
                 loadingDiv.classList.add('hidden');
             });
 
@@ -232,7 +231,7 @@
                 event.preventDefault(); // Prevent default form submission
 
                 if (!lineUserIdInput.value) {
-                    showError('ไม่พบ Line User ID กรุณาลองเข้าใหม่');
+                    showError('ไม่พบ Line User ID กรุณาลองเข้าใหม่ (User ID หายไป)');
                     return;
                 }
 
@@ -248,25 +247,28 @@
                     registrationDate: registrationDateInput.value
                 };
 
+                console.log('ข้อมูลที่กำลังจะส่งไปยัง Apps Script:', formData); // เพิ่ม log
+                
                 // Use google.script.run to call Apps Script function
                 google.script.run
                     .withSuccessHandler(function(response) {
                         loadingDiv.classList.add('hidden');
+                        console.log('ได้รับ Response จาก Apps Script (withSuccessHandler):', response); // เพิ่ม log
                         if (response === 'success') {
                             showSuccess();
                             // Optional: Clear form for new entry, or just show success
                             // form.reset();
                             // registrationDateInput.value = new Date().toISOString().slice(0, 10);
                         } else {
-                            showError('บันทึกข้อมูลไม่สำเร็จ: ' + response);
+                            showError('บันทึกข้อมูลไม่สำเร็จ (Apps Script อาจส่งข้อความ Error มา): ' + response);
                             submitButton.disabled = false;
                             submitButton.textContent = 'บันทึกข้อมูล';
                         }
                     })
                     .withFailureHandler(function(error) {
                         loadingDiv.classList.add('hidden');
-                        console.error('Error from Apps Script:', error);
-                        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message);
+                        console.error('เกิดข้อผิดพลาดในการเรียก Apps Script (withFailureHandler):', error); // เพิ่ม log
+                        showError('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์: ' + error.message);
                         submitButton.disabled = false;
                         submitButton.textContent = 'บันทึกข้อมูล';
                     })
