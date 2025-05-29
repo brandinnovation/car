@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนรีแมพรถยนต์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ลงทะเบียนรีแมพรถยนต์</h1>
+        <form id="remapForm">
+            <div>
+                <label for="fullName">ชื่อ-สกุล:</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div>
+                <label for="phoneNumber">เบอร์โทร:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div>
+                <label for="licensePlate">เลขทะเบียนรถ:</label>
+                <input type="text" id="licensePlate" name="licensePlate" required>
+            </div>
+            <div>
+                <label for="warrantyDate">วันที่ลงทะเบียนรับประกัน:</label>
+                <input type="text" id="warrantyDate" name="warrantyDate" readonly>
+            </div>
+            <button type="submit" id="submitButton">บันทึกข้อมูล</button>
+        </form>
+        <div id="message"></div>
+        <button id="closeButton" style="display:none; background-color: #555;">ปิดหน้าต่างนี้</button>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="script_register.js"></script>
+</body>
+</html>
