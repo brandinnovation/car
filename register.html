@@ -6,94 +6,8 @@
   <title>ลงทะเบียนรีแมพรถยนต์</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Kanit', sans-serif;
-    }
-    body {
-      background-color: #000;
-      color: #FFD700;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: rgba(30, 30, 30, 0.8);
-      padding: 25px;
-      border-radius: 15px;
-      border: 2px solid #FFD700;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    }
-    h1 {
-      text-align: center;
-      font-size: 28px;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #FFD700;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #FFD700;
-    }
-    input {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #FFD700;
-      border-radius: 8px;
-      background: #111;
-      color: #FFF;
-      font-size: 16px;
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background: #FFD700;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 30px;
-      transition: all 0.3s;
-    }
-    .btn:hover {
-      background: #FFC000;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-    }
-    .success-message {
-      text-align: center;
-      padding: 30px;
-      display: none;
-    }
-    .success-message h2 {
-      color: #4CAF50;
-      font-size: 24px;
-    }
-    .car-record {
-      background: rgba(255, 215, 0, 0.1);
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid #FFD700;
-      margin-bottom: 15px;
-    }
-    .car-record h3 {
-      margin-top: 0;
-      border-bottom: 2px solid #FFD700;
-      padding-bottom: 10px;
-    }
+    /* CSS เดิมทั้งหมด (เหมือนในคำตอบแรก) */
+    /* ยังคงใช้สไตล์เดิม - สีดำและสีเหลืองทอง */
   </style>
 </head>
 <body>
@@ -101,53 +15,56 @@
     <h1>ลงทะเบียนรีแมพรถยนต์</h1>
     
     <div id="registrationForm">
-      <div class="form-group">
-        <label for="firstName">ชื่อ</label>
-        <input type="text" id="firstName" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="lastName">สกุล</label>
-        <input type="text" id="lastName" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="phone">เบอร์โทร</label>
-        <input type="tel" id="phone" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="carPlate">เลขทะเบียนรถ</label>
-        <input type="text" id="carPlate" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="regDate">วันที่ลงทะเบียนรับประกัน</label>
-        <input type="date" id="regDate" required>
-      </div>
-      
-      <button class="btn" id="saveBtn">บันทึกข้อมูล</button>
+      <!-- ฟอร์มเดิมทั้งหมด -->
     </div>
     
-    <div id="successMessage" class="success-message">
+    <div id="successMessage" class="success-message" style="display:none;">
       <h2>บันทึกข้อมูลเรียบร้อยแล้ว</h2>
       <button class="btn" id="closeBtn">ปิดหน้าต่างนี้</button>
     </div>
   </div>
 
   <script>
-    // กำหนดวันที่ปัจจุบัน
-    document.getElementById('regDate').valueAsDate = new Date();
+    // 1. กำหนดค่าเริ่มต้น
+    const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbz2Kz_HPUAAu2KWUxxwBfrGVNXA6E9ecj2xb7iR-1Oz0DDUVD7MYhxM4rpf0_m1qbnCOw/exec'; // แทนที่ด้วย URL ของคุณ
+    let userId = null;
     
-    // รับ Line User ID จาก URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
+    // 2. ตั้งค่าวันที่ปัจจุบัน
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('regDate').valueAsDate = new Date();
+      
+      // 3. เริ่มต้น LIFF
+      liff.init({
+        liffId: '2007499630-0J5jPaaP' // แทนที่ด้วย LIFF ID จริง
+      })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          // 4. ดึงข้อมูลผู้ใช้
+          return liff.getProfile();
+        }
+      })
+      .then(profile => {
+        userId = profile.userId;
+        console.log('User ID:', userId);
+        
+        // 5. ตั้งค่าปุ่มบันทึก
+        document.getElementById('saveBtn').addEventListener('click', saveData);
+      })
+      .catch(error => {
+        console.error('LIFF Error:', error);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ' + error.message);
+      });
+      
+      // 6. ปุ่มปิดหน้าต่าง
+      document.getElementById('closeBtn').addEventListener('click', () => {
+        liff.closeWindow();
+      });
+    });
     
-    // ตั้งค่า endpoint
-    const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbz2Kz_HPUAAu2KWUxxwBfrGVNXA6E9ecj2xb7iR-1Oz0DDUVD7MYhxM4rpf0_m1qbnCOw/exec';
-    
-    // ปุ่มบันทึก
-    document.getElementById('saveBtn').addEventListener('click', async () => {
+    // 7. ฟังก์ชันบันทึกข้อมูล
+    async function saveData() {
       const data = {
         userId: userId,
         firstName: document.getElementById('firstName').value,
@@ -157,7 +74,14 @@
         regDate: document.getElementById('regDate').value
       };
       
+      // 8. ตรวจสอบข้อมูล
+      if (!data.firstName || !data.lastName || !data.phone || !data.carPlate) {
+        alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+        return;
+      }
+      
       try {
+        // 9. ส่งข้อมูลไปยัง Google Apps Script
         const response = await fetch(ENDPOINT_URL, {
           method: 'POST',
           body: JSON.stringify(data),
@@ -169,168 +93,44 @@
         const result = await response.json();
         
         if (result.status === 'success') {
-          // แสดงข้อความสำเร็จ
+          // 10. แสดงหน้าสำเร็จ
           document.getElementById('registrationForm').style.display = 'none';
           document.getElementById('successMessage').style.display = 'block';
           
-          // ส่ง Flex Message
+          // 11. ส่ง Flex Message
           sendFlexMessage(data);
+        } else {
+          throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึก');
         }
       } catch (error) {
         alert('เกิดข้อผิดพลาด: ' + error.message);
       }
-    });
+    }
     
-    // ปุ่มปิด
-    document.getElementById('closeBtn').addEventListener('click', () => {
-      liff.closeWindow();
-    });
-    
-    // ส่ง Flex Message
+    // 12. ฟังก์ชันส่ง Flex Message
     function sendFlexMessage(data) {
+      // ตรวจสอบว่า LIFF พร้อมใช้งาน
+      if (!liff.isInClient()) {
+        console.log('Flex Message can only be sent in LINE client');
+        return;
+      }
+      
       liff.sendMessages([
         {
           type: 'flex',
           altText: 'บันทึกข้อมูลเรียบร้อย',
           contents: {
-            type: 'bubble',
-            body: {
-              type: 'box',
-              layout: 'vertical',
-              contents: [
-                {
-                  type: 'text',
-                  text: 'บันทึกข้อมูลเรียบร้อย',
-                  weight: 'bold',
-                  size: 'xl',
-                  color: '#000000',
-                  align: 'center'
-                },
-                {
-                  type: 'separator',
-                  margin: 'lg'
-                },
-                {
-                  type: 'box',
-                  layout: 'vertical',
-                  margin: 'lg',
-                  spacing: 'sm',
-                  contents: [
-                    {
-                      type: 'box',
-                      layout: 'baseline',
-                      spacing: 'sm',
-                      contents: [
-                        {
-                          type: 'text',
-                          text: 'ชื่อ-สกุล',
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 2
-                        },
-                        {
-                          type: 'text',
-                          text: `${data.firstName} ${data.lastName}`,
-                          wrap: true,
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 5
-                        }
-                      ]
-                    },
-                    {
-                      type: 'box',
-                      layout: 'baseline',
-                      spacing: 'sm',
-                      contents: [
-                        {
-                          type: 'text',
-                          text: 'เบอร์โทร',
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 2
-                        },
-                        {
-                          type: 'text',
-                          text: data.phone,
-                          wrap: true,
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 5
-                        }
-                      ]
-                    },
-                    {
-                      type: 'box',
-                      layout: 'baseline',
-                      spacing: 'sm',
-                      contents: [
-                        {
-                          type: 'text',
-                          text: 'ทะเบียนรถ',
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 2
-                        },
-                        {
-                          type: 'text',
-                          text: data.carPlate,
-                          wrap: true,
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 5
-                        }
-                      ]
-                    },
-                    {
-                      type: 'box',
-                      layout: 'baseline',
-                      spacing: 'sm',
-                      contents: [
-                        {
-                          type: 'text',
-                          text: 'วันที่ลงทะเบียน',
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 2
-                        },
-                        {
-                          type: 'text',
-                          text: data.regDate,
-                          wrap: true,
-                          color: '#000000',
-                          size: 'sm',
-                          flex: 5
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ],
-              background: {
-                type: 'linearGradient',
-                angle: '0deg',
-                startColor: '#FFD700',
-                endColor: '#FFFFFF'
-              }
-            }
+            // Flex Message JSON เดิม (เหมือนในคำตอบแรก)
           }
         }
-      ]).catch(error => {
+      ])
+      .then(() => {
+        console.log('Flex message sent');
+      })
+      .catch(error => {
         console.error('Error sending flex message:', error);
       });
     }
-    
-    // Initialize LIFF
-    liff.init({ liffId: '2007499630-0J5jPaaP' })
-      .then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        }
-      })
-      .catch(error => {
-        console.error('LIFF initialization failed', error);
-      });
   </script>
 </body>
 </html>
