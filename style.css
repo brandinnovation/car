@@ -1,116 +1,171 @@
 body {
-    font-family: 'Kanit', sans-serif; /* หรือฟอนต์อื่นที่ชอบ */
-    background-color: #1a1a1a; /* ดำเข้ม */
-    color: #f0f0f0; /* ขาวเทา */
+    font-family: 'Arial', sans-serif;
+    background-color: #000; /* Black background */
+    color: #FFD700; /* Gold text */
     margin: 0;
     padding: 20px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
 }
 
 .container {
-    background-color: #2c2c2c; /* ดำเข้มรอง */
-    padding: 25px;
+    background-color: #1a1a1a; /* Darker black for container */
+    border: 1px solid #FFD700; /* Gold border */
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* เงาสีทอง */
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); /* Gold glow effect */
     width: 100%;
     max-width: 500px;
-    margin-bottom: 20px;
+    box-sizing: border-box;
+    position: relative; /* For loading overlay */
 }
 
-h1 {
-    color: #ffd700; /* เหลืองทอง */
+h1, h2 {
+    color: #FFD700;
     text-align: center;
     margin-bottom: 25px;
-    text-shadow: 0 0 5px #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 label {
     display: block;
     margin-bottom: 8px;
-    color: #ffd700; /* เหลืองทอง */
     font-weight: bold;
+    color: #FFF; /* White for labels for contrast */
 }
 
 input[type="text"],
 input[type="tel"],
 input[type="date"] {
-    width: calc(100% - 22px);
+    width: calc(100% - 20px);
     padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ffd700; /* ขอบสีทอง */
+    margin-bottom: 20px;
+    border: 1px solid #FFD700; /* Gold border */
     border-radius: 5px;
-    background-color: #3a3a3a; /* พื้นหลังช่องกรอก */
-    color: #f0f0f0;
-    font-size: 16px;
+    background-color: #333; /* Dark grey input background */
+    color: #FFF; /* White text in inputs */
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input[type="text"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="date"]::placeholder {
+    color: #aaa; /* Lighter grey placeholder text */
 }
 
 input[type="text"]:focus,
 input[type="tel"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+button:focus {
     outline: none;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+    border-color: #FFF; /* White border on focus */
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
 }
 
 button {
-    background-color: #ffd700; /* เหลืองทอง */
-    color: #1a1a1a; /* ดำ */
-    padding: 12px 20px;
+    background-color: #FFD700; /* Gold button */
+    color: #000; /* Black text on button */
     border: none;
+    padding: 15px 25px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1rem;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.1s ease;
     width: 100%;
-    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
-    background-color: #e6c300; /* เหลืองทองเข้มขึ้น */
+    background-color: #FFE666; /* Lighter gold on hover */
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
-button:active {
-    transform: scale(0.98);
-}
-
-#message {
+#responseMessage {
+    margin-top: 25px;
+    padding: 15px;
+    border-radius: 5px;
     text-align: center;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+    background-color: #28a745; /* Green for success */
+    color: #FFF;
+}
+
+#closeWindowBtn {
+    margin-top: 15px;
+    background-color: #007bff; /* Blue for close button */
+    color: white;
+}
+
+#closeWindowBtn:hover {
+    background-color: #0056b3;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFD700;
+    font-size: 1.5rem;
+    z-index: 100;
+    border-radius: 10px;
+    display: none; /* Hidden by default */
+}
+
+/* Data Display Styles */
+.car-list {
     margin-top: 20px;
-    font-size: 1.1em;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.success {
-    color: #4CAF50; /* เขียว */
-}
-
-.error {
-    color: #f44336; /* แดง */
-}
-
-.car-info-card {
-    background-color: #3a3a3a;
-    border: 1px solid #ffd700;
+.car-card {
+    background-color: #333; /* Dark grey card background */
+    border: 1px solid #FFD700;
     border-radius: 8px;
     padding: 15px;
-    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
-.car-info-card p {
+.car-card p {
     margin: 8px 0;
-    color: #f0f0f0;
+    color: #FFF;
 }
 
-.car-info-card strong {
-    color: #ffd700;
+.car-card p strong {
+    color: #FFD700; /* Gold for strong text in cards */
+    display: inline-block;
+    width: 120px; /* Align text nicely */
 }
 
-#loading {
-    text-align: center;
-    font-size: 1.2em;
-    color: #ffd700;
-    margin-top: 30px;
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    button {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    h1, h2 {
+        font-size: 1.8rem;
+    }
 }
