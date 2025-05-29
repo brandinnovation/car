@@ -1,0 +1,116 @@
+body {
+    font-family: 'Kanit', sans-serif; /* หรือฟอนต์อื่นที่ชอบ */
+    background-color: #1a1a1a; /* ดำเข้ม */
+    color: #f0f0f0; /* ขาวเทา */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #2c2c2c; /* ดำเข้มรอง */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* เงาสีทอง */
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #ffd700; /* เหลืองทอง */
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 0 0 5px #ffd700;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffd700; /* เหลืองทอง */
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="date"] {
+    width: calc(100% - 22px);
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ffd700; /* ขอบสีทอง */
+    border-radius: 5px;
+    background-color: #3a3a3a; /* พื้นหลังช่องกรอก */
+    color: #f0f0f0;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+}
+
+button {
+    background-color: #ffd700; /* เหลืองทอง */
+    color: #1a1a1a; /* ดำ */
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #e6c300; /* เหลืองทองเข้มขึ้น */
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+.success {
+    color: #4CAF50; /* เขียว */
+}
+
+.error {
+    color: #f44336; /* แดง */
+}
+
+.car-info-card {
+    background-color: #3a3a3a;
+    border: 1px solid #ffd700;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.car-info-card p {
+    margin: 8px 0;
+    color: #f0f0f0;
+}
+
+.car-info-card strong {
+    color: #ffd700;
+}
+
+#loading {
+    text-align: center;
+    font-size: 1.2em;
+    color: #ffd700;
+    margin-top: 30px;
+}
