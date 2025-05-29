@@ -1,5 +1,5 @@
 // ต้องเปลี่ยนเป็น Web App URL ของ Google Apps Script ที่คุณได้จากขั้นตอนที่ 1.3
-const GOOGLE_APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'; 
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBL7Sp11EUevexL_p_o_ZWFFNMLYU2mwo80l0YizSTd9ioCc8I5MAq1FD14ULMxQ4WhQ/exec'; 
 
 document.addEventListener('DOMContentLoaded', function() {
     const carListDiv = document.getElementById('carList');
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingOverlay = document.getElementById('loadingOverlay');
 
     liff.init({
-        liffId: 'YOUR_LIFF_ID_FOR_VIEW_DATA_HERE' // เปลี่ยนเป็น LIFF ID ของคุณสำหรับหน้าดูข้อมูล
+        liffId: '2007499630-r04RVeeV' // เปลี่ยนเป็น LIFF ID ของคุณสำหรับหน้าดูข้อมูล
     }).then(() => {
         if (!liff.isLoggedIn()) {
             liff.login();
