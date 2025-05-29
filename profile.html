@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลรถยนต์ของฉัน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ข้อมูลรถยนต์ของคุณ</h1>
+        <div id="userInfo">
+            <p><strong>ชื่อผู้ใช้ LINE:</strong> <span id="lineDisplayName">กำลังโหลด...</span></p>
+        </div>
+        <div id="carListContainer">
+            </div>
+        <div id="message"></div>
+        <div id="loading" style="display:none;">กำลังโหลดข้อมูลรถยนต์...</div>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="script_profile.js"></script>
+</body>
+</html>
