@@ -1,6 +1,6 @@
 // ---- CONFIGURATION ----
 const LIFF_ID_REGISTER = "2007499630-0J5jPaaP"; // <--- ใส่ LIFF ID สำหรับหน้าลงทะเบียนของคุณ
-const GAS_APP_URL = "https://script.google.com/macros/s/AKfycbwpGmRjW6FmWmcisJdrFwlLixylX3ery63_psrhaEEm8SuGIR7fLc6tVk6QyLjBGCxOKQ/exec"; // <--- ใส่ URL ของ Google Apps Script Web App ของคุณ
+const GAS_APP_URL = "https://script.google.com/macros/s/AKfycbyQ1BAC9E76wVrWut48qTWVb57FlB6jNs83oUNbkRfLbFPkaqw59Enu67LMre_5xyERYg/exec"; // <--- ใส่ URL ของ Google Apps Script Web App ของคุณ
 // ---- END CONFIGURATION ----
 
 document.addEventListener('DOMContentLoaded', () => {
