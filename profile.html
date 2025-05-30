@@ -1,120 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ข้อมูลส่วนตัว</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* CSS เดิมทั้งหมด (เหมือนในคำตอบแรก) */
-    /* ยังคงใช้สไตล์เดิม - สีดำและสีเหลืองทอง */
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลรถยนต์ของฉัน</title>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/liff.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #ffffff; /* White text */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align to top */
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #0d0d0d; /* Even darker container */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+            border: 2px solid #FFD700; /* Gold border */
+            margin-bottom: 20px; /* Space between cards */
+        }
+        h1 {
+            color: #FFD700; /* Gold title */
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+        }
+        .car-card {
+            background-color: #2a2a2a; /* Darker background for each car card */
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #FFD700; /* Gold border for each card */
+        }
+        .car-card:last-child {
+            margin-bottom: 0;
+        }
+        .car-info p {
+            margin: 5px 0;
+            color: #ffffff;
+        }
+        .car-info p strong {
+            color: #FFD700; /* Gold text for labels */
+            display: inline-block;
+            width: 120px; /* Align labels */
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: #FFD700;
+            font-size: 1.5em;
+            display: none; /* Hidden by default */
+        }
+        .no-data {
+            text-align: center;
+            font-size: 1.2em;
+            color: #AAAAAA;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>ข้อมูลการลงทะเบียนรถยนต์</h1>
-    
-    <div id="profileData">
-      <div class="loading">กำลังโหลดข้อมูล...</div>
+    <div class="loading-overlay" id="loadingOverlay">
+        กำลังโหลดข้อมูล...
     </div>
-    
-    <button class="btn" id="closeBtn">ปิดหน้าต่างนี้</button>
-  </div>
 
-  <script>
-    // 1. กำหนดค่าเริ่มต้น
-    const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbz2Kz_HPUAAu2KWUxxwBfrGVNXA6E9ecj2xb7iR-1Oz0DDUVD7MYhxM4rpf0_m1qbnCOw/exec'; // แทนที่ด้วย URL ของคุณ
-    let userId = null;
-    
-    // 2. เริ่มต้น LIFF
-    document.addEventListener('DOMContentLoaded', () => {
-      liff.init({
-        liffId: '2007499630-r04RVeeV' // แทนที่ด้วย LIFF ID จริง
-      })
-      .then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        } else {
-          // 3. ดึงข้อมูลผู้ใช้
-          return liff.getProfile();
-        }
-      })
-      .then(profile => {
-        userId = profile.userId;
-        console.log('User ID:', userId);
-        
-        // 4. โหลดข้อมูล
-        loadProfileData();
-      })
-      .catch(error => {
-        console.error('LIFF Error:', error);
-        document.getElementById('profileData').innerHTML = `
-          <div class="no-data">
-            เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ${error.message}
-          </div>
-        `;
-      });
-      
-      // 5. ปุ่มปิดหน้าต่าง
-      document.getElementById('closeBtn').addEventListener('click', () => {
-        liff.closeWindow();
-      });
-    });
-    
-    // 6. ฟังก์ชันโหลดข้อมูล
-    async function loadProfileData() {
-      try {
-        // 7. ดึงข้อมูลจาก Google Apps Script
-        const response = await fetch(`${ENDPOINT_URL}?userId=${userId}`);
-        const result = await response.json();
-        
-        const profileContainer = document.getElementById('profileData');
-        
-        if (result.status !== 'success' || result.data.length === 0) {
-          profileContainer.innerHTML = `
-            <div class="no-data">
-              ไม่พบข้อมูลการลงทะเบียน
+    <div class="container">
+        <h1>🏎️ ข้อมูลรถยนต์ของฉัน 🏎️</h1>
+        <div id="carDataContainer">
             </div>
-          `;
-          return;
+        <div id="noDataMessage" class="no-data" style="display:none;">
+            ยังไม่มีข้อมูลการลงทะเบียนรถยนต์ของคุณ
+        </div>
+        <div id="errorMessage" class="message" style="display:none; color: #FF4500;"></div>
+    </div>
+
+    <script>
+        // แทนที่ด้วย Web app URL ของ Apps Script ที่คุณ Deploy ไว้
+        const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz2Kz_HPUAAu2KWUxxwBfrGVNXA6E9ecj2xb7iR-1Oz0DDUVD7MYhxM4rpf0_m1qbnCOw/exec';
+        let lineUserId = '';
+
+        window.onload = function() {
+            initLiff();
+        };
+
+        async function initLiff() {
+            try {
+                showLoading();
+                await liff.init({ liffId: '2007499630-r04RVeeV' }); // แทนที่ด้วย LIFF ID ของหน้าข้อมูลส่วนตัว
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                } else {
+                    const profile = await liff.getProfile();
+                    lineUserId = profile.userId;
+                    console.log('Line User ID:', lineUserId);
+                    fetchCarData(lineUserId);
+                }
+            } catch (err) {
+                hideLoading();
+                console.error('LIFF initialization failed', err);
+                document.getElementById('errorMessage').textContent = 'LIFF initialization failed: ' + err.message;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
         }
-        
-        // 8. แสดงข้อมูล
-        let html = '';
-        result.data.forEach((car, index) => {
-          html += `
-            <div class="car-record">
-              <h3>รถยนต์ ${index + 1}</h3>
-              <div class="info-row">
-                <div class="info-label">ชื่อ-สกุล:</div>
-                <div class="info-value">${car.firstName} ${car.lastName}</div>
-              </div>
-              <div class="info-row">
-                <div class="info-label">เบอร์โทร:</div>
-                <div class="info-value">${car.phone}</div>
-              </div>
-              <div class="info-row">
-                <div class="info-label">ทะเบียนรถ:</div>
-                <div class="info-value">${car.carPlate}</div>
-              </div>
-              <div class="info-row">
-                <div class="info-label">วันที่ลงทะเบียน:</div>
-                <div class="info-value">${car.regDate}</div>
-              </div>
-            </div>
-          `;
-        });
-        
-        profileContainer.innerHTML = html;
-        
-      } catch (error) {
-        document.getElementById('profileData').innerHTML = `
-          <div class="no-data">
-            เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}
-          </div>
-        `;
-      }
-    }
-  </script>
+
+        async function fetchCarData(userId) {
+            try {
+                const response = await fetch(`${APPS_SCRIPT_WEB_APP_URL}?action=getCarData&lineUserId=${userId}`);
+                const result = await response.json();
+                hideLoading();
+
+                const carDataContainer = document.getElementById('carDataContainer');
+                const noDataMessage = document.getElementById('noDataMessage');
+                const errorMessage = document.getElementById('errorMessage');
+
+                if (result.success && result.data.length > 0) {
+                    carDataContainer.innerHTML = ''; // Clear previous data
+                    result.data.forEach(car => {
+                        const card = document.createElement('div');
+                        card.className = 'car-card';
+                        card.innerHTML = `
+                            <div class="car-info">
+                                <p><strong>ชื่อ-สกุล:</strong> ${car.fullName}</p>
+                                <p><strong>เบอร์โทร:</strong> ${car.phoneNumber}</p>
+                                <p><strong>ทะเบียนรถ:</strong> ${car.licensePlate}</p>
+                                <p><strong>วันที่รับประกัน:</strong> ${car.warrantyDate}</p>
+                            </div>
+                        `;
+                        carDataContainer.appendChild(card);
+                    });
+                    noDataMessage.style.display = 'none';
+                    errorMessage.style.display = 'none';
+                } else if (result.success && result.data.length === 0) {
+                    carDataContainer.innerHTML = '';
+                    noDataMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                } else {
+                    carDataContainer.innerHTML = '';
+                    noDataMessage.style.display = 'none';
+                    errorMessage.textContent = 'ไม่สามารถดึงข้อมูลได้: ' + result.message;
+                    errorMessage.style.display = 'block';
+                }
+
+            } catch (error) {
+                hideLoading();
+                console.error('Error fetching car data:', error);
+                document.getElementById('errorMessage').textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
