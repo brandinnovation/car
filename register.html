@@ -159,31 +159,28 @@
                     lineUserId = profile.userId;
                     console.log('Line User ID:', lineUserId);
 
-                    // แก้ไข: ย้ายการประกาศตัวแปร yyyy, mm, dd ให้อยู่ใน scope ที่ถูกต้อง
-                    // เพื่อให้สามารถเข้าถึงได้เมื่อต้องการกำหนดค่าให้ input 'warrantyDate'
                     const today = new Date();
-                    const yyyy = today.getFullYear();
-                    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
+                    const yyyy = today.getFullYear(); // แก้ไข: ให้เป็น 'yyyy' ที่ถูกต้อง
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
                     const dd = String(today.getDate()).padStart(2, '0');
+                    // แก้ไข: ใช้ Template literal (backticks ``) ใน JavaScript เพื่อแทรกตัวแปร
                     document.getElementById('warrantyDate').value = `${yyyy}-${mm}-${dd}`;
                 }
             } catch (err) {
                 console.error('LIFF initialization failed', err);
-                // แสดง alert เฉพาะเมื่อมีข้อผิดพลาดร้ายแรง
                 alert('LIFF initialization failed: ' + err.message + '\nโปรดตรวจสอบ LIFF ID และการเชื่อมต่ออินเทอร์เน็ต');
             }
         }
 
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // ป้องกันการ submit ฟอร์มแบบปกติ
-            showLoading(); // แสดง loading overlay
+            event.preventDefault();
+            showLoading();
 
             const fullName = document.getElementById('fullName').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
             const licensePlate = document.getElementById('licensePlate').value;
-            const warrantyDate = document.getElementById('warrantyDate').value; // ค่าที่กรอกอัตโนมัติ
+            const warrantyDate = document.getElementById('warrantyDate').value;
 
-            // ตรวจสอบว่าได้ lineUserId มาแล้วหรือไม่
             if (!lineUserId) {
                 alert('ไม่สามารถดึง Line User ID ได้ กรุณาลองเข้าใหม่ผ่าน LINE App');
                 hideLoading();
@@ -199,59 +196,54 @@
             };
 
             try {
-                // ส่งข้อมูลไปยัง Apps Script
                 const response = await fetch(`${APPS_SCRIPT_WEB_APP_URL}?action=saveRegistration`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'text/plain;charset=utf-8', // สำคัญสำหรับ Apps Script ที่ใช้ doPost(e)
+                        'Content-Type': 'text/plain;charset=utf-8',
                     },
                     body: JSON.stringify(data)
                 });
 
-                const result = await response.json(); // แปลง response เป็น JSON
-                hideLoading(); // ซ่อน loading overlay
-
+                const result = await response.json();
+                hideLoading();
                 const responseMessageDiv = document.getElementById('responseMessage');
                 const closeButton = document.getElementById('closeButton');
                 const form = document.getElementById('registrationForm');
 
                 if (result.success) {
                     responseMessageDiv.textContent = result.message;
-                    responseMessageDiv.style.color = '#FFD700'; // สีทองสำหรับข้อความสำเร็จ
-                    form.style.display = 'none'; // ซ่อนฟอร์มเมื่อบันทึกสำเร็จ
+                    responseMessageDiv.style.color = '#FFD700';
+                    form.style.display = 'none';
                 } else {
                     responseMessageDiv.textContent = 'บันทึกข้อมูลไม่สำเร็จ: ' + result.message;
-                    responseMessageDiv.style.color = '#FF4500'; // สีส้มแดงสำหรับข้อความผิดพลาด
+                    responseMessageDiv.style.color = '#FF4500';
                 }
-                responseMessageDiv.style.display = 'block'; // แสดงข้อความตอบกลับ
-                closeButton.style.display = 'block'; // แสดงปุ่มปิดหน้าต่าง
+                responseMessageDiv.style.display = 'block';
+                closeButton.style.display = 'block';
 
             } catch (error) {
-                hideLoading(); // ซ่อน loading overlay
+                hideLoading();
                 const responseMessageDiv = document.getElementById('responseMessage');
                 responseMessageDiv.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message;
-                responseMessageDiv.style.color = '#FF4500'; // สีส้มแดงสำหรับข้อความผิดพลาด
-                responseMessageDiv.style.display = 'block'; // แสดงข้อความผิดพลาด
-                document.getElementById('closeButton').style.display = 'block'; // แสดงปุ่มปิดหน้าต่าง
-                console.error('Error submitting form:', error); // แสดงข้อผิดพลาดใน console
+                responseMessageDiv.style.color = '#FF4500';
+                responseMessageDiv.style.display = 'block';
+                document.getElementById('closeButton').style.display = 'block';
+                console.error('Error submitting form:', error);
             }
         });
 
-        // Event listener สำหรับปุ่มปิดหน้าต่าง
         document.getElementById('closeButton').addEventListener('click', function() {
             if (liff.isInClient()) {
-                liff.closeWindow(); // ปิดหน้าต่าง LIFF หากอยู่ใน LINE App
+                liff.closeWindow();
             } else {
                 alert('คุณกำลังดูอยู่นอก LINE, ไม่สามารถปิดหน้าต่างได้โดยตรง');
             }
         });
 
-        // ฟังก์ชันสำหรับแสดง Loading Overlay
         function showLoading() {
             document.getElementById('loadingOverlay').style.display = 'flex';
         }
 
-        // ฟังก์ชันสำหรับซ่อน Loading Overlay
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
         }
